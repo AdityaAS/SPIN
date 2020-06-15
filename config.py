@@ -6,20 +6,20 @@ Things you need to change: *_ROOT that indicate the path to each dataset
 from os.path import join
 
 H36M_ROOT = ''
-LSP_ROOT = ''
-LSP_ORIGINAL_ROOT = ''
-LSPET_ROOT = ''
-MPII_ROOT = ''
-COCO_ROOT = ''
-MPI_INF_3DHP_ROOT = ''
-PW3D_ROOT = ''
-UPI_S1H_ROOT = ''
+LSP_ROOT = '/scratche/data/readwrite/datasets/LSP'
+LSP_ORIGINAL_ROOT = '/scratche/data/readwrite/datasets/HRLSP/'
+LSPET_ROOT = '/scratche/data/readwrite/datasets/LSPEXT'
+MPII_ROOT = '/scratche/data/readwrite/datasets/MPII'
+COCO_ROOT = '/scratche/data/readwrite/datasets/COCO'
+MPI_INF_3DHP_ROOT = '/scratche/data/readwrite/datasets/MPI3DHP/mpi_inf_3dhp'
+PW3D_ROOT = '/scratche/data/readwrite/datasets/3DPW'
+UPI_S1H_ROOT = '/scratche/data/readwrite/datasets/UP3D/upi-s1h'
 
 # Output folder to save test/train npz files
 DATASET_NPZ_PATH = 'data/dataset_extras'
 
 # Output folder to store the openpose detections
-# This is requires only in case you want to regenerate 
+# This is requires only in case you want to regenerate
 # the .npz files with the annotations.
 OPENPOSE_PATH = 'datasets/openpose'
 
