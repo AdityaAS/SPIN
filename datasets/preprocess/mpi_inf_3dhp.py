@@ -7,6 +7,7 @@ import json
 import numpy as np
 import scipy.io as sio
 import scipy.misc
+import imageio
 from .read_openpose import read_openpose
 
 def read_calibration(calib_file, vid_list):
@@ -24,7 +25,7 @@ def read_calibration(calib_file, vid_list):
         Rs.append(R)
         Ts.append(T)
     return Ks, Rs, Ts
-    
+
 def train_data(dataset_path, openpose_path, out_path, joints_idx, scaleFactor, extract_img=False, fits_3d=None):
 
     joints17_idx = [4, 18, 19, 20, 23, 24, 25, 3, 5, 6, 7, 9, 10, 11, 14, 15, 16]
@@ -56,7 +57,7 @@ def train_data(dataset_path, openpose_path, out_path, joints_idx, scaleFactor, e
             for j, vid_i in enumerate(vid_list):
 
                 # image folder
-                imgs_path = os.path.join(seq_path,    
+                imgs_path = os.path.join(seq_path,
                                          'imageFrames',
                                          'video_' + str(vid_i))
 
@@ -114,7 +115,7 @@ def train_data(dataset_path, openpose_path, out_path, joints_idx, scaleFactor, e
                     ok_pts = np.logical_and(x_in, y_in)
                     if np.sum(ok_pts) < len(joints_idx):
                         continue
-                        
+
                     part = np.zeros([24,3])
                     part[joints_idx] = np.hstack([joints, np.ones([17,1])])
                     json_file = os.path.join(openpose_path, 'mpi_inf_3dhp',
@@ -136,7 +137,7 @@ def train_data(dataset_path, openpose_path, out_path, joints_idx, scaleFactor, e
                     parts_.append(part)
                     Ss_.append(S)
                     openposes_.append(openpose)
-                       
+
     # store the data struct
     if not os.path.isdir(out_path):
         os.makedirs(out_path)
@@ -158,9 +159,9 @@ def train_data(dataset_path, openpose_path, out_path, joints_idx, scaleFactor, e
                            scale=scales_,
                            part=parts_,
                            S=Ss_,
-                           openpose=openposes_)        
-        
-        
+                           openpose=openposes_)
+
+
 def test_data(dataset_path, out_path, joints_idx, scaleFactor):
 
     joints17_idx = [14, 11, 12, 13, 8, 9, 10, 15, 1, 16, 0, 5, 6, 7, 2, 3, 4]
@@ -199,7 +200,7 @@ def test_data(dataset_path, out_path, joints_idx, scaleFactor):
 
             # check that all joints are visible
             img_file = os.path.join(dataset_path, img_name)
-            I = scipy.misc.imread(img_file)
+            I = imageio.imread(img_file)
             h, w, _ = I.shape
             x_in = np.logical_and(joints[:, 0] < w, joints[:, 0] >= 0)
             y_in = np.logical_and(joints[:, 1] < h, joints[:, 1] >= 0)
@@ -228,21 +229,21 @@ def test_data(dataset_path, out_path, joints_idx, scaleFactor):
                        center=centers_,
                        scale=scales_,
                        part=parts_,
-                       S=Ss_)    
+                       S=Ss_)
 
 def mpi_inf_3dhp_extract(dataset_path, openpose_path, out_path, mode, extract_img=False, static_fits=None):
 
     scaleFactor = 1.2
     joints_idx = [14, 3, 4, 5, 2, 1, 0, 16, 12, 17, 18, 9, 10, 11, 8, 7, 6]
-    
+
     if static_fits is not None:
-        fits_3d = os.path.join(static_fits, 
+        fits_3d = os.path.join(static_fits,
                                'mpi-inf-3dhp_mview_fits.npz')
     else:
         fits_3d = None
-    
+
     if mode == 'train':
-        train_data(dataset_path, openpose_path, out_path, 
+        train_data(dataset_path, openpose_path, out_path,
                    joints_idx, scaleFactor, extract_img=extract_img, fits_3d=fits_3d)
     elif mode == 'test':
         test_data(dataset_path, out_path, joints_idx, scaleFactor)
